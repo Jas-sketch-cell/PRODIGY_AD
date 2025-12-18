@@ -1,0 +1,99 @@
+Create a QR code scanner app that allows users to scan QR codes using their device's camera. Upon scanning, the app should extract the information encoded in the QR code and display it on the screen. Additionally, it should provide an option to open links or perform specific actions based on the scanned content.
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Scanner</title>
+
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a2540, #00bcd4);
+            font-family: Arial, sans-serif;
+            color: #fff;
+            padding-top: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #reader {
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .result {
+            background: #111;
+            padding: 15px;
+            border-radius: 8px;
+            width: 300px;
+            word-wrap: break-word;
+            text-align: center;
+        }
+
+        .result a {
+            color: #00bcd4;
+            text-decoration: none;
+        }
+
+        .result a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>QR Code Scanner</h1>
+    <div id="reader"></div>
+    <div class="result" id="result">Scan a QR code to see the result.</div>
+
+    <script>
+        const resultElement = document.getElementById("result");
+
+        function onScanSuccess(decodedText, decodedResult) {
+            resultElement.innerHTML = "";
+
+            if (decodedText.startsWith("http://") || decodedText.startsWith("https://")) {
+                const link = document.createElement("a");
+                link.href = decodedText;
+                link.target = "_blank";
+                link.textContent = "Open Scanned Link";
+                resultElement.appendChild(link);
+            } else {
+                resultElement.textContent = "Scanned Content: " + decodedText;
+            }
+        }
+
+        function onScanFailure(error) {
+        }
+
+        const html5QrCode = new Html5Qrcode("reader");
+        Html5Qrcode.getCameras().then(cameras => {
+            if (cameras && cameras.length) {
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    onScanSuccess,
+                    onScanFailure
+                );
+            }
+        }).catch(err => {
+            resultElement.textContent = "Camera not found or permission denied.";
+        });
+    </script>
+
+</body>
+</html>
