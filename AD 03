@@ -1,0 +1,131 @@
+Build a basic stopwatch app that displays minutes, seconds, and milliseconds and allows users to start, pause, and reset the timer.
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stopwatch App</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a2540, #00bcd4);
+            color: #fff;
+        }
+
+        .stopwatch {
+            background: #111;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .time {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .start {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .pause {
+            background: #ff9800;
+            color: #fff;
+        }
+
+        .reset {
+            background: #f44336;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stopwatch">
+        <h1>Stopwatch</h1>
+        <div class="time" id="display">00:00:00</div>
+
+        <div class="buttons">
+            <button class="start" onclick="start()">Start</button>
+            <button class="pause" onclick="pause()">Pause</button>
+            <button class="reset" onclick="reset()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval;
+
+        function formatTime(time) {
+            let ms = Math.floor((time % 1000) / 10);
+            let sec = Math.floor((time / 1000) % 60);
+            let min = Math.floor((time / 60000) % 60);
+
+            return (
+                String(min).padStart(2, '0') + ":" +
+                String(sec).padStart(2, '0') + ":" +
+                String(ms).padStart(2, '0')
+            );
+        }
+
+        function start() {
+            if (timerInterval) return;
+
+            startTime = Date.now() - elapsedTime;
+            timerInterval = setInterval(() => {
+                elapsedTime = Date.now() - startTime;
+                document.getElementById("display").innerText = formatTime(elapsedTime);
+            }, 10);
+        }
+
+        function pause() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function reset() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            elapsedTime = 0;
+            document.getElementById("display").innerText = "00:00:00";
+        }
+    </script>
+
+</body>
+</html>
