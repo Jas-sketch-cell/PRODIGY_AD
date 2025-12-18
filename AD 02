@@ -1,0 +1,148 @@
+Create a To-Do list app that allows users to add, edit, and delete tasks.
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do List App</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a2540, #00bcd4);
+        }
+
+        .todo-container {
+            background: #111;
+            padding: 25px;
+            border-radius: 10px;
+            width: 320px;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #00bcd4;
+            color: #000;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #222;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+        }
+
+        li span {
+            flex: 1;
+        }
+
+        .actions button {
+            margin-left: 5px;
+            background: #333;
+            color: #fff;
+        }
+
+        .actions button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="todo-container">
+        <h1>To-Do List</h1>
+
+        <div class="input-group">
+            <input type="text" id="taskInput" placeholder="Add a task">
+            <button onclick="addTask()">Add</button>
+        </div>
+
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        const taskInput = document.getElementById("taskInput");
+        const taskList = document.getElementById("taskList");
+
+        function addTask() {
+            const taskText = taskInput.value.trim();
+            if (!taskText) return;
+
+            const li = document.createElement("li");
+            const span = document.createElement("span");
+            span.textContent = taskText;
+
+            const actions = document.createElement("div");
+            actions.className = "actions";
+
+            const editBtn = document.createElement("button");
+            editBtn.textContent = "Edit";
+            editBtn.onclick = () => editTask(span);
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete";
+            deleteBtn.onclick = () => li.remove();
+
+            actions.appendChild(editBtn);
+            actions.appendChild(deleteBtn);
+
+            li.appendChild(span);
+            li.appendChild(actions);
+
+            taskList.appendChild(li);
+            taskInput.value = "";
+        }
+
+        function editTask(span) {
+            const newTask = prompt("Edit task:", span.textContent);
+            if (newTask !== null && newTask.trim() !== "") {
+                span.textContent = newTask.trim();
+            }
+        }
+    </script>
+
+</body>
+</html>
