@@ -1,0 +1,161 @@
+Develop a Tic Tac Toe game app where two players can take turns to place their symbols (X or O) on a 3x3 grid. The objective is to form a horizontal, vertical, or diagonal line of three of their symbols to win the game. The app should also include a reset option to start a new game.
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic Tac Toe Game</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0a2540, #00bcd4);
+            color: #fff;
+        }
+
+        .game {
+            background: #111;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .status {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #00bcd4;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            width: 80px;
+            height: 80px;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .cell:hover {
+            background: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #00bcd4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game">
+        <h1>Tic Tac Toe</h1>
+        <div class="status" id="status">Player X's Turn</div>
+
+        <div class="board" id="board">
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+            <div class="cell"></div>
+        </div>
+
+        <button onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <script>
+        const cells = document.querySelectorAll(".cell");
+        const statusText = document.getElementById("status");
+
+        let currentPlayer = "X";
+        let gameActive = true;
+        let board = ["", "", "", "", "", "", "", "", ""];
+
+        const winningConditions = [
+            [0,1,2],[3,4,5],[6,7,8],
+            [0,3,6],[1,4,7],[2,5,8],
+            [0,4,8],[2,4,6]
+        ];
+
+        function handleCellClick(e) {
+            const index = Array.from(cells).indexOf(e.target);
+
+            if (board[index] !== "" || !gameActive) return;
+
+            board[index] = currentPlayer;
+            e.target.textContent = currentPlayer;
+
+            if (checkWin()) {
+                statusText.textContent = Player ${currentPlayer} Wins!;
+                gameActive = false;
+                return;
+            }
+
+            if (!board.includes("")) {
+                statusText.textContent = "It's a Draw!";
+                gameActive = false;
+                return;
+            }
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            statusText.textContent = Player ${currentPlayer}'s Turn;
+        }
+
+        function checkWin() {
+            return winningConditions.some(condition =>
+                condition.every(index => board[index] === currentPlayer)
+            );
+        }
+
+        function resetGame() {
+            board = ["", "", "", "", "", "", "", "", ""];
+            gameActive = true;
+            currentPlayer = "X";
+            statusText.textContent = "Player X's Turn";
+            cells.forEach(cell => cell.textContent = "");
+        }
+
+        cells.forEach(cell => cell.addEventListener("click", handleCellClick));
+    </script>
+
+</body>
+</html>
